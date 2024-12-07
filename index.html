@@ -149,42 +149,71 @@ tw-passage {
         background-size: cover; /* الحفاظ على حجم الخلفية المناسب */
         height: auto; /* السماح للطول بالتكيف مع المحتوى */
     }
-</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="Start" tags="" position="775,100" size="100,100">&lt;&lt;set $points to 0&gt;&gt;
+</style><script role="script" id="twine-user-script" type="text/twine-javascript"><script>
+document.getElementById("sendDataButton").onclick = function() {
+    var url = "https://script.google.com/macros/s/AKfycbwd0SKrDp2BlquVQLzQIYogErL1jIFLcRPw1s6vOiIHY92x0M1P1z8DhWAFac3uHemX/exec";  // استبدلها برابط السكريبت الخاص بك
+    var data = {
+        name: "<<print $name>>",
+        studentID: "<<print $studentID>>",
+        identityNumber: "<<print $identityNumber>>",
+        specialization: "<<print $specialization>>",
+        points: <<print $points>>,
+        entryTime: "<<print $entryTime>>"
+    };
 
-&lt;!-- جمع البيانات --&gt;
-&lt;&lt;set $playerName to prompt(&quot;ما اسمك؟&quot;, &quot;&quot;)&gt;&gt;
-&lt;&lt;set $idNumber to prompt(&quot;ما رقم هويتك؟&quot;, &quot;&quot;)&gt;&gt;
-&lt;&lt;set $studentNumber to prompt(&quot;ما رقمك الجامعي؟&quot;, &quot;&quot;)&gt;&gt;
+    fetch(url + "?name=" + encodeURIComponent(data.name) +
+          "&studentID=" + encodeURIComponent(data.studentID) +
+          "&identityNumber=" + encodeURIComponent(data.identityNumber) +
+          "&specialization=" + encodeURIComponent(data.specialization) +
+          "&points=" + encodeURIComponent(data.points) +
+          "&entryTime=" + encodeURIComponent(data.entryTime))
+    .then(response => response.text())
+    .then(data => {
+        console.log(data);
+        alert("تم إرسال البيانات بنجاح!"); // رسالة تأكيد
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("حدث خطأ أثناء إرسال البيانات.");
+    });
+};
+</script></script><tw-passagedata pid="1" name="Play" tags="" position="775,0" size="100,100">&lt;&lt;set $name to &quot;&quot;&gt;&gt;
+&lt;&lt;set $studentID to &quot;&quot;&gt;&gt;
+&lt;&lt;set $identityNumber to &quot;&quot;&gt;&gt;
+&lt;&lt;set $specialization to &quot;&quot;&gt;&gt;
+&lt;&lt;set $points to 0&gt;&gt;  
+&lt;&lt;set $entryTime to new Date().toISOString()&gt;&gt; 
 
-&lt;!-- عرض الترحيب --&gt;
-&lt;p&gt;مرحبًا بك يا &lt;&lt;print $playerName&gt;&gt;! لنبدأ.&lt;/p&gt;
+&lt;&lt;script&gt;&gt;
+    // دالة لعرض نافذة منبثقة لجمع البيانات
+    function showPrompt() {
+        const name = prompt(&quot;ما اسمك؟&quot;);
+        if (name) {
+            // تعيين المتغير مباشرة باستخدام SugarCube
+            State.setVar(&#39;$name&#39;, name);  
+        }
+        
+        const studentID = prompt(&quot;ما هو الرقم الجامعي؟&quot;);
+        if (studentID) {
+            State.setVar(&#39;$studentID&#39;, studentID);  
+        }
+        
+        const identityNumber = prompt(&quot;ما هو رقم الهوية؟&quot;);
+        if (identityNumber) {
+            State.setVar(&#39;$identityNumber&#39;, identityNumber);  
+        }
+        
+        const specialization = prompt(&quot;ما هو تخصصك؟&quot;);
+        if (specialization) {
+            State.setVar(&#39;$specialization&#39;, specialization);  
+        }
+    }
+    showPrompt();
+&lt;&lt;/script&gt;&gt;
 
-&lt;!-- عرض نص تقديمي --&gt;
-&lt;p&gt;مرحبًا بك في لعبة التحقيق! أنت محقق ولديك مهمة التحقيق في قضية فساد مالي في إحدى المؤسسات التجارية.&lt;/p&gt;
+مرحبًا بك في اللعبة!
 
-&lt;!-- إضافة الزر لبدء التحقيق --&gt;
-[[ابدأ التحقيق-&gt;Choice1]]
-
-:: Start
-(set: $points to 0)
-
-&lt;!-- جمع البيانات --&gt;
-(set: $playerName to (prompt: &quot;ما اسمك؟&quot;, &quot;&quot;))
-(set: $idNumber to (prompt: &quot;ما رقم هويتك؟&quot;, &quot;&quot;))
-(set: $studentNumber to (prompt: &quot;ما رقمك الجامعي؟&quot;, &quot;&quot;))
-
-&lt;!-- عرض الترحيب --&gt;
-&lt;p&gt;مرحبًا بك يا $playerName! لنبدأ.&lt;/p&gt;
-
-&lt;!-- تحديد النقاط --&gt;
-(set: $points to $points + 10) &lt;!-- يمكنك تخصيص النقاط هنا بناءً على تقدم اللاعب --&gt;
-
-&lt;!-- عرض النقاط --&gt;
-&lt;p&gt;لقد جمعت $points نقاط حتى الآن.&lt;/p&gt;
-
-&lt;!-- الزر لإرسال البيانات --&gt;
-[[إرسال بياناتك إلى Google Sheets|SendData]]
-</tw-passagedata><tw-passagedata pid="2" name="Choice1" tags="" position="775,225" size="100,100">في ساعة متأخرة من الليل، تلقيت اتصالًا من مصدر مجهول، وكانت نبرته مليئة بالتوتر والتحذير، حيث أشار إلى فساد، يجري في إحدى المؤسسات التجارية. وأوضح أن بعض العاملين في المؤسسة متورطون في صفقات مشبوهة تتضمن تحويلات مالية ضخمة عبر قنوات سرية. ورغم غموض المعلومات، فإنها كانت تحمل إشارات خطيرة تتعلق بأسماء متورطين وتواريخ محددة، مع تحذير من أن الأمور قد تتصاعد إذا لم تُتخذ خطوات عاجلة.
+[[Start]] </tw-passagedata><tw-passagedata pid="2" name="Choice1" tags="" position="775,225" size="100,100">في ساعة متأخرة من الليل، تلقيت اتصالًا من مصدر مجهول، وكانت نبرته مليئة بالتوتر والتحذير، حيث أشار إلى فساد، يجري في إحدى المؤسسات التجارية. وأوضح أن بعض العاملين في المؤسسة متورطون في صفقات مشبوهة تتضمن تحويلات مالية ضخمة عبر قنوات سرية. ورغم غموض المعلومات، فإنها كانت تحمل إشارات خطيرة تتعلق بأسماء متورطين وتواريخ محددة، مع تحذير من أن الأمور قد تتصاعد إذا لم تُتخذ خطوات عاجلة.
 
 مع انطلاق التحقيق، ظهرت علامات مثيرة للريبة: اختفاء وثائق حاسمة من الأرشيف، رسائل تهديد غامضة تصل إلى الشهود، وأرقام مالية ضخمة تبدو وكأنها اختفت من السجلات دون أي تفسير واضح. في الوقت نفسه، بدأ موظفون في المؤسسة يتلقون تهديدات مبطنة لإجبارهم على الصمت. ومع تقدم التحقيق، كانت كل خطوة تفتح بابًا جديدًا مليئًا بالأسرار، ومع كل جواب يظهر سؤال جديد.
 
@@ -303,44 +332,34 @@ tw-passage {
 </tw-passagedata><tw-passagedata pid="20" name="Choice16" tags="" position="325,850" size="100,100">
 التحقيق مستمر ولكنك بحاجة لتقديم ملف متكامل.
 [[إغلاق القضية|FinalOutcome]]
-[[إبلاغ وسائل الاعلام بالقضية|Mission Failed]]</tw-passagedata><tw-passagedata pid="21" name="FinalOutcome" tags="" position="450,850" size="100,100">
-
-&lt;&lt;if $points &gt;= 28&gt;&gt;
+[[إبلاغ وسائل الاعلام بالقضية|Mission Failed]]</tw-passagedata><tw-passagedata pid="21" name="FinalOutcome" tags="" position="450,850" size="100,100">&lt;&lt;if $points &gt;= 28&gt;&gt;
     تهانينا! لقد نجحت في حل القضية بشكل ممتاز! جمعت &lt;&lt;print $points&gt;&gt; نقطة. تم استرداد الأموال وتقديم جميع المتورطين للعدالة.
 &lt;&lt;elseif $points &gt;= 24&gt;&gt;
     لقد نجحت في حل القضية بشكل جيد. جمعت &lt;&lt;print $points&gt;&gt; نقطة. لكن لا تزال هناك بعض النقاط التي تحتاج لتحسينها في المستقبل.
 &lt;&lt;else&gt;&gt;
     للأسف، التحقيق لم يكن كافيًا. جمعت فقط &lt;&lt;print $points&gt;&gt; نقطة. العديد من الأدلة المهمة لم يتم اكتشافها، مما أدى إلى فشل في تقديم القضية بشكل كامل.
 &lt;&lt;/if&gt;&gt;
-</tw-passagedata><tw-passagedata pid="22" name="SendData" tags="" position="1700,225" size="100,100">:: SendData
-&lt;&lt;link &quot;إرسال بياناتك إلى Google Sheets&quot;&gt;&gt;
-  &lt;&lt;set $url to &quot;https://script.google.com/macros/s/AKfycbze1tV269ZCvujfX6AfjcG--ms0MXC_IkdjQhXyjkHduAqEqPcq0SSWPVyTvKkGXUqi/exec&quot;&gt;&gt;
-  
-  &lt;&lt;set $data to {
-    name: $playerName,
-    idNumber: $idNumber,
-    studentNumber: $studentNumber,
-    points: $points
-  }&gt;&gt;
 
-  &lt;&lt;run fetch($url, {
-    method: &quot;POST&quot;,
-    headers: {
-      &quot;Content-Type&quot;: &quot;application/json&quot;
-    },
-    body: JSON.stringify($data)
-  }).then(response =&gt; {
-    return response.json(); // تأكد من تحويل الرد إلى JSON
-  }).then(json =&gt; {
-    if (json.message == &quot;تم حفظ البيانات بنجاح&quot;) {
-      alert(&quot;تم إرسال بياناتك بنجاح!&quot;);
-    } else {
-      alert(&quot;حدث خطأ في إرسال البيانات: &quot; + JSON.stringify(json)); // عرض تفاصيل الخطأ
-    }
-  }).catch(error =&gt; {
-    alert(&quot;حدث خطأ أثناء الاتصال بالسيرفر: &quot; + error.message); // عرض رسالة الخطأ
-  })&gt;&gt;
-&lt;&lt;/link&gt;&gt;
+هنا معلوماتك:
+
+- **الاسم**: &lt;&lt;print $name&gt;&gt;
+- **الرقم الجامعي**: &lt;&lt;print $studentID&gt;&gt;
+- **رقم الهوية**: &lt;&lt;print $identityNumber&gt;&gt;
+- **التخصص**: &lt;&lt;print $specialization&gt;&gt;
+- **النقاط النهائية**: &lt;&lt;print $points&gt;&gt;
+- **وقت الدخول**: &lt;&lt;print $entryTime&gt;&gt;
+
+&lt;button id=&quot;sendDataButton&quot;&gt;إرسال البيانات&lt;/button&gt;
+</tw-passagedata><tw-passagedata pid="22" name="Start" tags="" position="900,125" size="100,100">&lt;&lt;set $points to 0&gt;&gt;
+
+
+
+&lt;p&gt;مرحبًا بك في لعبة التحقيق! أنت محقق ولديك مهمة التحقيق في قضية فساد مالي في إحدى المؤسسات التجارية.&lt;/p&gt;
+
+&lt;!-- إضافة الزر لبدء التحقيق --&gt;
+[[ابدأ التحقيق-&gt;Choice1]]
+
+
 </tw-passagedata></tw-storydata>
 	<script id="script-sugarcube" type="text/javascript">
 	/*! SugarCube JS */
